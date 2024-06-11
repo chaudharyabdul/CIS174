@@ -1,0 +1,50 @@
+﻿@{
+    ViewData["Title"] = "Current Age";
+}
+
+@model FirstResponsiveWebAppChaudhary.Models.User
+
+<h2>First Web App</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true) // Display validation errors
+
+    <div>
+        @Html.LabelFor(m => m.Name)
+        @Html.TextBoxFor(m => m.Name)
+        @Html.ValidationMessageFor(m => m.Name)
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.BirthYear)
+        @Html.TextBoxFor(m => m.BirthYear)
+        @Html.ValidationMessageFor(m => m.BirthYear)
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.BirthDate)
+        @Html.TextBoxFor(m => m.BirthDate, "{0:yyyy-MM-dd}", new { type = "date" })
+    </div>
+
+    <input type="submit" value="Submit" />
+    <input type="button" value="Clear" onclick="clearForm(this.form)" />
+
+    <script> 
+        // JS functino to clear any input and messages
+        function clearForm(form) {
+            for (var i = 0; i < form.elements.length; i++) {
+                var element = form.elements[i];
+                if (element.type === 'text' || element.type === 'date') {
+                    element.value = '';
+                }
+            }
+            // Clear messages
+            document.getElementById('message').innerHTML = '';
+            document.getElementById('extraMessage').innerHTML = '';
+        }
+    </script>
+}
+
+<p id="message">@ViewBag.Message</p>
+<p id="extraMessage">@ViewBag.ExtraMessage</p>
