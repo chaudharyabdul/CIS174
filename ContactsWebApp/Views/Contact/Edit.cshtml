@@ -1,0 +1,11 @@
+﻿@model Contact
+
+@{
+    ViewData["Title"] = "Add Contact";
+}
+<input type="hidden" asp-for="Id" />
+<div>
+    <label asp-for="Note"></label>
+    <textarea asp-for="Note"></textarea>
+    <span asp-validation-for="Note"></span>
+</div>
