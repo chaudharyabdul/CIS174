@@ -1,5 +1,6 @@
 ﻿using Ch04MovieListChaudhary.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace Ch04MovieListChaudhary.Controllers
@@ -8,15 +9,16 @@ namespace Ch04MovieListChaudhary.Controllers
     {
         private MovieContext context { get; set; }
 
-        public HomeController(MovieContext ctx) => context = ctx;
+        public HomeController(MovieContext ctx)
+        {
+            context = ctx ?? throw new ArgumentNullException(nameof(ctx));
+        }
 
         public IActionResult Index()
         {
-            var movies = context.Movies.OrderBy(m => m.Name).ToList();
+            var movies = context.Movies.Include(m => m.Genre).OrderBy(m => m.Name).ToList();
             return View(movies);
         }
-
-        private readonly ILogger<HomeController> _logger;
 
         public IActionResult Privacy()
         {
