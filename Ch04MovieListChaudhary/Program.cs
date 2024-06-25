@@ -8,9 +8,18 @@ builder.Services.AddControllersWithViews();
 
 // Add EF Core DI
 builder.Services.AddDbContext<MovieContext>(options =>
+{
     options.UseSqlServer(
-        builder.Configuration.GetConnectionString(
-            "MovieContext")));
+        builder.Configuration.GetConnectionString("MovieContext"),
+        sqlServerOptionsAction: sqlOptions =>
+        {
+            // Enable retry on failure
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(30),
+                errorNumbersToAdd: null);
+        });
+});
 
 // To make URLs lowercase and end with a trailing slash
 builder.Services.AddRouting(options =>
@@ -35,6 +44,11 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "customRoute",
+    pattern: "custom-route-page",
+    defaults: new { controller = "Page", action = "CustomRoutePage" });
 
 app.MapControllerRoute(
     name: "default",
