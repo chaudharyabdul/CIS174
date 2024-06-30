@@ -24,4 +24,9 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+app.MapControllerRoute(
+    name: "assignment",
+    pattern: "Assignment/{accessLevel:int:range(1,10)}",
+    defaults: new { controller = "Assignment", action = "Index" });
+
 app.Run();
