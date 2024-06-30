@@ -1,0 +1,32 @@
+﻿@model IEnumerable<Country>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="filters">
+    <form asp-action="Filter" method="get">
+        <select name="game">
+            <option value="ALL" selected="@(ViewBag.SelectedGame == "ALL" ? "selected" : null)">ALL Games</option>
+            <option value="Summer Olympics" selected="@(ViewBag.SelectedGame == "Summer Olympics" ? "selected" : null)">Summer Olympics</option>
+            <option value="Winter Olympics" selected="@(ViewBag.SelectedGame == "Winter Olympics" ? "selected" : null)">Winter Olympics</option>
+            <option value="Paralympics" selected="@(ViewBag.SelectedGame == "Paralympics" ? "selected" : null)">Paralympics</option>
+            <option value="Youth Olympic Games" selected="@(ViewBag.SelectedGame == "Youth Olympic Games" ? "selected" : null)">Youth Olympic Games</option>
+        </select>
+        <select name="sportType">
+            <option value="ALL" selected="@(ViewBag.SelectedSportType == "ALL" ? "selected" : null)">ALL Types</option>
+            <option value="Indoor" selected="@(ViewBag.SelectedSportType == "Indoor" ? "selected" : null)">Indoor</option>
+            <option value="Outdoor" selected="@(ViewBag.SelectedSportType == "Outdoor" ? "selected" : null)">Outdoor</option>
+        </select>
+        <button type="submit">Filter</button>
+    </form>
+</div>
+
+<div class="country-list">
+    @foreach (var country in Model)
+    {
+        <div class="country">
+            <img src="@country.FlagUrl" alt="@country.Name" title="@country.Name - @country.Game.Name - @country.SportType.Name" />
+        </div>
+    }
+</div>
