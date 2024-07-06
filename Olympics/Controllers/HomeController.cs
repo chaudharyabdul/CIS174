@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 using Olympics.Data;
-using System.Linq;
-using System.Threading.Tasks;
+using Olympics.Models;
 
 public class HomeController : Controller
 {
@@ -15,35 +14,43 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var countries = await _context.Countries
-            .Include(c => c.Game)
-            .Include(c => c.SportType)
-            .OrderBy(c => c.Name)
-            .ToListAsync();
-        return View(countries);
+        var viewModel = new OlympicsFilterViewModel
+        {
+            Game = "ALL",
+            SportType = "ALL",
+            Countries = await _context.Countries
+                .Include(c => c.Game)
+                .Include(c => c.SportType)
+                .OrderBy(c => c.Name)
+                .ToListAsync()
+        };
+        return View(viewModel);
     }
 
     public async Task<IActionResult> Filter(string game = "ALL", string sportType = "ALL")
     {
-        ViewBag.SelectedGame = game;
-        ViewBag.SelectedSportType = sportType;
-
-        var countries = _context.Countries
+        var countriesQuery = _context.Countries
             .Include(c => c.Game)
             .Include(c => c.SportType)
             .AsQueryable();
 
         if (game != "ALL")
         {
-            countries = countries.Where(c => c.Game.Name == game);
+            countriesQuery = countriesQuery.Where(c => c.Game.Name == game);
         }
 
         if (sportType != "ALL")
         {
-            countries = countries.Where(c => c.SportType.Name == sportType);
+            countriesQuery = countriesQuery.Where(c => c.SportType.Name == sportType);
         }
 
-        var result = await countries.OrderBy(c => c.Name).ToListAsync();
-        return View("Index", result);
+        var viewModel = new OlympicsFilterViewModel
+        {
+            Game = game,
+            SportType = sportType,
+            Countries = await countriesQuery.OrderBy(c => c.Name).ToListAsync()
+        };
+
+        return View("Index", viewModel);
     }
 }

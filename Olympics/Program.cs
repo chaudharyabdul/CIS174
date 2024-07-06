@@ -25,7 +25,7 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    name: "filter",
+    pattern: "{controller=Home}/{action=Filter}/{game?}/{sportType?}");
 
 app.Run();
