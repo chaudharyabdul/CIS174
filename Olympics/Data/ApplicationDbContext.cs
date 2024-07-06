@@ -13,6 +13,7 @@ namespace Olympics.Data
         public DbSet<Country> Countries { get; set; }
         public DbSet<Game> Games { get; set; }
         public DbSet<SportType> SportTypes { get; set; }
+        public DbSet<Ticket> Tickets { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
