@@ -1,15 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Olympics.Data;
 using Olympics.Models;
+using Olympics.Services;
+using System.Linq;
+using System.Threading.Tasks;
 
 public class HomeController : Controller
 {
     private readonly ApplicationDbContext _context;
+    private readonly FavoritesService _favoritesService;
 
-    public HomeController(ApplicationDbContext context)
+    public HomeController(ApplicationDbContext context, FavoritesService favoritesService)
     {
         _context = context;
+        _favoritesService = favoritesService;
     }
 
     public async Task<IActionResult> Index()
@@ -52,5 +57,37 @@ public class HomeController : Controller
         };
 
         return View("Index", viewModel);
+    }
+
+    public async Task<IActionResult> Details(int id)
+    {
+        var country = await _context.Countries
+            .Include(c => c.Game)
+            .Include(c => c.SportType)
+            .FirstOrDefaultAsync(c => c.Id == id);
+
+        if (country == null)
+        {
+            return NotFound();
+        }
+
+        return View(country);
+    }
+
+    public IActionResult AddToFavorites(int id)
+    {
+        var country = _context.Countries.Find(id);
+        if (country != null)
+        {
+            _favoritesService.AddToFavorites(country);
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    public IActionResult ViewFavorites()
+    {
+        var favorites = _favoritesService.GetFavorites();
+        return View(favorites);
     }
 }

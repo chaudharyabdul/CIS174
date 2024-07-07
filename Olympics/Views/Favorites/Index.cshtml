@@ -1,0 +1,21 @@
+﻿@model List<Olympics.Models.Country>
+
+@{
+    ViewData["Title"] = "Favorites";
+}
+
+<h2>Favorites</h2>
+
+<div class="country-list">
+    @foreach (var country in Model)
+    {
+        <div class="country">
+            <img src="@country.FlagUrl" alt="@country.Name" />
+            <p>@country.Name</p>
+        </div>
+    }
+</div>
+<div>
+    <a asp-action="Index" asp-controller="Home" class="btn btn-primary">Return to Home Page</a>
+    <a asp-action="ClearFavorites" class="btn btn-secondary">Clear Favorites</a>
+</div>
