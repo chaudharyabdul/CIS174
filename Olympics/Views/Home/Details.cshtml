@@ -1,0 +1,15 @@
+﻿@model Olympics.Models.Country
+
+@{
+    ViewData["Title"] = "Country Details";
+}
+
+<h2>@Model.Name</h2>
+<p>Game: @Model.Game.Name</p>
+<p>Sport Type: @Model.SportType.Name</p>
+<img src="@Model.FlagUrl" alt="@Model.Name" />
+
+<div>
+    <a asp-action="Index" class="btn btn-primary">Return to Home Page</a>
+    <a asp-action="AddToFavorites" asp-route-id="@Model.Id" class="btn btn-secondary">Add to Favorites</a>
+</div>

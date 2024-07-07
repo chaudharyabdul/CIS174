@@ -26,7 +26,9 @@
     @foreach (var country in Model.Countries)
     {
         <div class="country">
-            <img src="@country.FlagUrl" alt="@country.Name" title="@country.Name - @country.Game.Name - @country.SportType.Name" />
+            <a asp-action="Details" asp-route-id="@country.Id">
+                <img src="@country.FlagUrl" alt="@country.Name" title="@country.Name - @country.Game.Name - @country.SportType.Name" />
+            </a>
         </div>
     }
 </div>

@@ -11,6 +11,6 @@ namespace Olympics.Models
         public string Description { get; set; }
         public int SprintNumber { get; set; }
         public int PointValue { get; set; }
-        public string Status { get; set; } // to do, in progress, quality assurance(qa), done
+        public string Status { get; set; }
     }
 }
