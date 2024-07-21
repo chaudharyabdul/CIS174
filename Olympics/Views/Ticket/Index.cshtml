@@ -24,7 +24,9 @@
                 <td>@ticket.Description</td>
                 <td>@ticket.SprintNumber</td>
                 <td>@ticket.PointValue</td>
-                <td>@ticket.Status</td>
+                <td>
+                    @await Component.InvokeAsync("Status", new { status = ticket.Status })
+                </td>
             </tr>
         }
     </tbody>

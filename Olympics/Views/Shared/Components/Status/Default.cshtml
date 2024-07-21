@@ -1,0 +1,6 @@
+﻿@model string
+
+<button class="btn
+    @(Model == "to do" ? "btn-secondary" : Model == "in progress" ? "btn-warning" : Model == "quality assurance" ? "btn-info" : "btn-success")">
+    @Model
+</button>
