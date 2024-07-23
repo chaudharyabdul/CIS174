@@ -1,39 +1,54 @@
+using Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Olympics.Data;
 using Olympics.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+// Services Configuration: 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
-    sqlServerOptions => sqlServerOptions.EnableRetryOnFailure()));
-builder.Services.AddSession();
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+    options.UseSqlServer(connectionString));
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddDistributedMemoryCache(); // Needed for session storage
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+});
+
+// Controller configuration remains the same
+builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor(); // Required for FavoritesService
 builder.Services.AddScoped<FavoritesService>();
 
+// Application Building and Configuration: 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
+{
+    app.UseMigrationsEndPoint();
+}
+else
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
 
+// Middleware Configuration:
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-app.UseSession();
-
+app.UseSession(); // Use the session middleware
+app.UseAuthentication();
 app.UseAuthorization();
 
+// Route Configuration:
 app.MapControllerRoute(
-    name: "filter",
-    pattern: "{controller=Home}/{action=Filter}/{game?}/{sportType?}");
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapRazorPages();
 
 app.Run();

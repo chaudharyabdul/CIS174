@@ -22,6 +22,6 @@ namespace Olympics.Models
 
         [Required(ErrorMessage = "Status is required")]
         [RegularExpression("to do|in progress|quality assurance|done", ErrorMessage = "Invalid Status")]
-        public string Status { get; set; }
+        public string Status { get; set; } = "to do";
     }
 }
